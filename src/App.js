@@ -8,8 +8,11 @@ import GameHost from "./components/GameHost";
 import GameJoin from "./components/GameJoin";
 import Game from "./components/Game";
 import HowToPlay from "./components/HowToPlay";
+import Credits from "./components/Credits";
 import GameLobby from "./components/GameLobby";
+import DevLogs from "./components/DevLogs";
 import { GameProvider } from "./components/GameContext";
+
 
 //Screens
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
@@ -19,7 +22,7 @@ function App() {
 
   return (
     <GameProvider>
-      <div className="bg-light-peach absolute inset-0 h-full w-full bg-[linear-gradient(to_right,#80808012_2px,transparent_2px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]">
+      <div className="bg-light-peach min-h-screen  w-full bg-[linear-gradient(to_right,#80808012_2px,transparent_2px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]">
         <Router>
           <Routes>
             <Route path="/" element={<MainMenu />} />
@@ -28,6 +31,8 @@ function App() {
             <Route path="/lobby" element={<GameLobby />} />
             <Route path="/game" element={<Game />} />
             <Route path="/how-to-play" element={<HowToPlay />} />
+            <Route path="/credits" element={<Credits />} />
+            <Route path="/DevLogs" element={<DevLogs />} />
           </Routes>
         </Router>
       </div>

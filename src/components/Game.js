@@ -6,9 +6,17 @@ import { useGameContext } from "./GameContext";
 import { submitScore } from "../api/gameApi";
 import { supabase } from "../api/supabaseClient";
 import Winners from "./Winners";
+import NumberIncrement from "./NumberIncrement";
+import LoadingDots from "./LoadingDots";
+import { useNavigate } from "react-router-dom";
 
 
 function Game() {
+
+    //This is so we can go to next component (GameLobby)
+    const navigate = useNavigate();
+
+
     //All vars come from here
     const { gameData, setGameData } = useGameContext();
     //Put this in backend perhaps?
@@ -50,8 +58,9 @@ function Game() {
             }, 1000);
 
             return () => { clearTimeout(timeoutId) };
-        }else{
+        } else {
             //force users to submit what they have
+            setPlayerDone(true);
             handleSubmit();
         }
 
@@ -91,6 +100,15 @@ function Game() {
         // Increment counter separately
         setCounter(prevCounter => prevCounter + 1);
     };
+
+
+    //FInish it all
+    const finishGame = () => {
+        setAccumulatedItems((prev) =>
+            prev.map((item) => (item === null ? 'X' : item))
+        );
+        setCounter(6);
+    }
 
     //Grab the foods from the list 
     //Randomly selecting food items (based on what the user gave us)
@@ -148,6 +166,26 @@ function Game() {
                         //Set it
                         setGameFinished(gameData.winner);
                     }
+
+                    //Detect if host wants to rematch.
+                    const rematchCount = payload.new.rematch_counter;
+                    // console.log("A change happened here is new rematch " + rematchCount );
+                    // console.log("A change happened here is old rematch " + gameData.rematchCount );
+
+                    if (rematchCount > gameData.rematchCount) {
+                        //First insert the data into gameData before we send player to lobby!
+                        setGameData((oldData) => ({
+                            ...oldData,
+                            gameStatus: payload.new.game_status,
+                            foodItems: payload.new.food_items,
+                            selectedItems: payload.new.selected_items,
+                            winner: payload.new.winner,
+                            rematchCount: rematchCount
+                        }));
+
+                        //throw the non leading players to lobby
+                        navigate('/lobby');
+                    }
                 }
             )
             .subscribe();
@@ -155,6 +193,11 @@ function Game() {
         //Generate the food items the player sees
         randomSelectFood();
 
+        //Update gameStatus initially to STARTED (I realized it's been WAITING for a while)
+        setGameData((oldData) => ({
+            ...oldData,
+            gameStatus: "STARTED"
+        }));
         // Clean up the event listener on component unmount
         return () => {
             supabase.removeChannel(subscription);
@@ -186,29 +229,27 @@ function Game() {
         return acc;
     }, {});
 
-
-
     return (
         <div className="text-3xl font-bold min-h-screen">
             <div>
                 {/* Top bar - basically slots for the items */}
                 <div className="flex flex-col">
-                    <TopBar items={accumulatedItems} gameStatus={gameData.gameStatus} />
+                    <TopBar items={accumulatedItems} gameStatus={gameData.gameStatus} images={gameData.images} playerDone={playerDone} />
                 </div>
 
                 {/* Middle part of screen, below the Top Bar and above the Table */}
-                <div className="flex items-center justify-center h-[250px]">
+                <div className="flex items-center justify-center lg:mt-7">
                     {playerDone ?
                         (<div className="text-center">
                             <div>
                                 Your total calories...
                             </div>
                             <h1 className="text-7xl">
-                                {totalCalories}
+                                <NumberIncrement value={totalCalories} />
                             </h1>
-                            <div className="mt-16">
-                                Waiting on other players to finish..
-                            </div>
+                            {gameData.gameStatus === "STARTED" ? (
+                                <LoadingDots text="Waiting on other players to finish" />
+                            ) : (<></>)}
                         </div>
                         )
                         : ""}
@@ -229,18 +270,22 @@ function Game() {
                                 winner={gameData.winner}
                                 currentPlayer={gameData.currentPlayer}
                                 caloriesGoal={gameData.caloriesGoal}
+                                gameId={gameData.gameId}
+                                setGameData={setGameData}
+                                amILeader={gameData.leader}
                             />
                         </div>
                         )
                         : ""}
                 </div>
 
-                {/* Entire Table */}
-                <div className="fixed bottom-0 w-[95%] left-0 right-0 mx-auto">
+                {/* Entire Table - I hid the table and food items because on small screens it takes too much space. */}
+                <div className={`fixed bottom-0 w-[95%] left-0 right-0 mx-auto ${playerDone ? 'hidden':''} lg:block`}>
                     <Level
                         items={selectedItems}
                         selectFood={setCurrentSelectedItem}
                         tempSelected={currentSelectedItem}
+                        images={gameData.images}
                     />
 
                     {/* Top part of table */}
@@ -257,10 +302,11 @@ function Game() {
                     ></div>
 
                     {/* Bottom part of table */}
-                    <div className=" bg-dark-brown text-center h-[33vh]">
+                    <div className=" bg-dark-brown text-center lg:h-[33vh] sm:h-[25vh]">
                         <Controller
                             updateItemAtIndex={updateItemAtIndex}
                             refreshFood={randomSelectFood}
+                            finishGame={finishGame}
                             currentFood={currentSelectedItem}
                             skip={skip}
                             setSkip={setSkip}

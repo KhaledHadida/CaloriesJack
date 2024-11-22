@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useGameContext } from "./GameContext";
 import { joinGame } from "../api/gameApi";
 import { useNavigate } from "react-router-dom";
+import BackButton from "./BackButton";
 
 
 function GameJoin() {
@@ -45,11 +46,12 @@ function GameJoin() {
                         gameStatus: res.gameSession.game_status,
                         foodItems: res.gameSession.food_items,
                         selectedItems: res.gameSession.selected_items,
-                        //Leader is undefined here purposely
+                        //Leader is undefined here purposely (I hid it)
                         leader: res.gameSession.leader,
                         caloriesGoal: res.gameSession.calories_goal,
                         timer: res.gameSession.timer,
-                        winner: res.gameSession.winner
+                        winner: res.gameSession.winner,
+                        rematchCount: res.gameSession.rematch_counter
                     }));
                 });
                 setResponse("Successfully joined a game!");
@@ -77,9 +79,10 @@ function GameJoin() {
     }
 
     return (
-        <div className="h-screen flex flex-col text-3xl">
-            <h1 className="text-8xl mb-12 text-center">Join a Game</h1>
-            <div className="flex flex-grow items-center justify-center ">
+        <div className="h-full flex flex-col text-3xl">
+            <BackButton />
+            <h1 className="text-6xl md:text-8xl lg:text-center text-right my-5">Join a Game</h1>
+            <div className="flex flex-grow items-center justify-center">
                 <form className="bg-light-orange shadow-md rounded px-8 pt-6 pb-8 mb-4 text-center" onSubmit={handleSubmit}>
                     <label>
                         Please input Game Session ID
@@ -94,7 +97,7 @@ function GameJoin() {
                     <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-11"
                         id="name" type="text" placeholder="Enter your name (max. 10 chars)" maxLength="10" value={name} onChange={handleName} required />
                     <p className="my-5 text-red-500">{response}</p>
-                    <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                    <button className="bg-green-500 hover:bg-green-700 text-white py-2 w-1/2 rounded focus:outline-none focus:shadow-outline" type="submit">
                         Join
                     </button>
                 </form>

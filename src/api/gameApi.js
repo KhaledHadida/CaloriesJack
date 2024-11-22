@@ -69,7 +69,7 @@ export const leaveGame = async (player, gameId) => {
 
     try {
         const response = await api.post('/leaveGame', data, {
-            
+
         });
         return response.data;
     } catch (error) {
@@ -153,7 +153,36 @@ export const endGame = async (gameId) => {
         });
 
         return response.data;
-        
+
+    } catch (error) {
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data.error || "An unexpected error occurred.");
+        } else if (error.request) {
+            throw new Error("No response received from the server.");
+        } else {
+            // General errors
+            throw new Error(error.message);
+        }
+    }
+}
+
+
+//Rematch - ONLY LEADERS CAN DO THIS.
+export const rematch = async (gameId) => {
+    //params
+    const data = {
+        gameId: gameId
+    }
+
+    try {
+        const response = await api.post('/rematch', data, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            withCredentials: true
+        });
+
+        return response.data;
     } catch (error) {
         if (error.response && error.response.data) {
             throw new Error(error.response.data.error || "An unexpected error occurred.");

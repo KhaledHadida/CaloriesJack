@@ -15,7 +15,10 @@ export const GameProvider = ({children}) => {
         leader: null,
         caloriesGoal: 1000,
         timer: 60,
-        winner: null
+        winner: null,
+        //This is to store all the images for the food
+        images: {},
+        rematchCount: 0
     });
 
 

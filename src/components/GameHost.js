@@ -3,13 +3,14 @@ import { useEffect, useState } from "react";
 import { IoRefreshCircle } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
 import { useGameContext } from "./GameContext";
+import BackButton from "./BackButton";
 
 function GameHost() {
     //Global access of game properties
-    const {setGameData} = useGameContext();
+    const { setGameData } = useGameContext();
 
     //This is so we can go to next component (GameLobby)
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
     //Fields:
 
     //ID for game session
@@ -46,14 +47,14 @@ function GameHost() {
         e.preventDefault();
         try {
             if (validateInput) {
-                await createGame(name, gameId, calories, timer).then((res)=>{
+                await createGame(name, gameId, calories, timer).then((res) => {
                     //console.log(res);
-                    setGameData((oldData)=>({
+                    setGameData((oldData) => ({
                         ...oldData,
                         gameId: res.gameSession.game_id,
                         players: res.gameSession.players,
                         //Track who is who (Initially had it for non participating players but also leader needs it)
-                        currentPlayer: {"name": name, "player_id": res.leaderID},
+                        currentPlayer: { "name": name, "player_id": res.leaderID },
                         gameStatus: res.gameSession.game_status,
                         foodItems: res.gameSession.food_items,
                         selectedItems: res.gameSession.selected_items,
@@ -108,8 +109,9 @@ function GameHost() {
     }, []);
 
     return (
-        <div className="text-3xl h-screen flex flex-col">
-            <h1 className="text-8xl text-center">Host a Game</h1>
+        <div className="text-3xl h-full flex flex-col">
+            <BackButton />
+            <h1 className="text-6xl md:text-8xl lg:text-center text-right my-5">Host a Game</h1>
             <div className="flex items-center justify-center flex-grow">
                 <form className="bg-light-orange shadow-md rounded px-8 pt-6 pb-8 mb-4 text-center" onSubmit={handleSubmit}>
                     {/* Left side - which will have the configuration for the main party leader to choose */}
@@ -151,7 +153,7 @@ function GameHost() {
                         <input className="block shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-11 w-full"
                             id="caloriesGoal" type="number" placeholder="Timer (min 30 secs)" max="9999" min="30" value={timer} onChange={handleTimer} required />
                         <p className="my-5 text-red-500">{response}</p>
-                        <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                        <button className="bg-green-500 hover:bg-green-700 text-white py-2 w-1/2 rounded focus:outline-none focus:shadow-outline transform transition-transform duration-200 hover:scale-110" type="submit">
                             Create
                         </button>
                     </div>
