@@ -13,11 +13,26 @@ function DevLogs() {
                 <li>Further improvement to the UI (i.e game host & join)</li>
                 <li>Fix mobile responsiveness for portrait mode (as of now it's not suitable for it, please play landscape!)</li>
                 <li>More customization in game lobbies (i.e cals per X grams, number of skips, etc)</li>
-                <li>Themes (like dark & light mode)</li>
                 <li>Increase food items pool from 100 to 500 (maybe.. I need the art)</li>
             </ul>
 
-            <h1 className="text-4xl font-bold underline">Version 2.0</h1>
+            <h1 className="mt-14 text-4xl font-bold underline">Version 2.1: Mostly Bug Fixes</h1>
+
+            {/* List for Version 2.1 */}
+            <ul className="list-disc text-xl sm:text-3xl mx-5 list-inside space-y-3">
+                <li>Fixed non-leader players being forced into rematch after leaving at end of the game.</li>
+                <li>"Unknown" players no longer appears on results table if player chooses to leave.</li>
+                <li>Added Show/Hide button for results table at end of the game.</li>
+                <li>Updated instructions for playing the game.</li>
+                <li>Fixed players having unauthorized access to lobby & game.</li>
+                <li>Added tips in lobby while waiting for others.</li>
+                <li>Added in game timer clock animation.</li>
+                <li>Fixed it so players who leave mid-game have their scores removed.</li>
+                <li>Further improved Mobile UI (added both landscape and portrait support)</li>
+                <li>Added dark mode</li>
+            </ul>
+
+            <h1 className="mt-14 text-4xl font-bold underline">Version 2.0</h1>
 
             {/* List for Version 2.0 */}
             <ul className="list-disc text-xl sm:text-3xl mx-5 list-inside space-y-3">

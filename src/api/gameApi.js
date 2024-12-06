@@ -84,7 +84,7 @@ export const leaveGame = async (player, gameId) => {
     }
 }
 
-//Leave a game
+//Start a game
 export const startGame = async (gameId) => {
     //params
     const data = {

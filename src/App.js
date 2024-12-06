@@ -22,7 +22,9 @@ function App() {
 
   return (
     <GameProvider>
-      <div className="bg-light-peach min-h-screen  w-full bg-[linear-gradient(to_right,#80808012_2px,transparent_2px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]">
+      <div className="bg-light-peach dark:bg-black min-h-screen w-full dark:text-white
+      bg-[linear-gradient(to_right,#80808012_2px,transparent_2px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]
+      dark:bg-[linear-gradient(to_right,rgba(255,255,255,0.07)_2px,transparent_2px),linear-gradient(to_bottom,rgba(255,255,255,0.07)_1px,transparent_1px)]">
         <Router>
           <Routes>
             <Route path="/" element={<MainMenu />} />

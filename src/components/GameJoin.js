@@ -83,21 +83,19 @@ function GameJoin() {
             <BackButton />
             <h1 className="text-6xl md:text-8xl lg:text-center text-right my-5">Join a Game</h1>
             <div className="flex flex-grow items-center justify-center">
-                <form className="bg-light-orange shadow-md rounded px-8 pt-6 pb-8 mb-4 text-center" onSubmit={handleSubmit}>
+                <form className="dark:bg-dark-gray bg-light-orange shadow-md rounded px-8 pt-6 pb-8 mb-4 text-center" onSubmit={handleSubmit}>
                     <label>
                         Please input Game Session ID
                     </label>
-                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-11"
+                    <input className="dark:bg-medium-gray dark:placeholder-light-gray dark:text-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-11"
                         id="gameID" type="number" placeholder="Game ID (up to 4 digits)" max="9999" min="0" onChange={handleGame} value={gameId} required />
-
-
                     <label>
                         Your Name:
                     </label>
-                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-11"
+                    <input className="dark:bg-medium-gray dark:placeholder-light-gray dark:text-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-11"
                         id="name" type="text" placeholder="Enter your name (max. 10 chars)" maxLength="10" value={name} onChange={handleName} required />
                     <p className="my-5 text-red-500">{response}</p>
-                    <button className="bg-green-500 hover:bg-green-700 text-white py-2 w-1/2 rounded focus:outline-none focus:shadow-outline" type="submit">
+                    <button className="dark:bg-medium-gray bg-green-500 hover:bg-green-700 text-white py-2 w-1/2 rounded focus:outline-none focus:shadow-outline transform transition-transform duration-200 hover:scale-110" type="submit">
                         Join
                     </button>
                 </form>

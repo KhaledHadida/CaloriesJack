@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import NumberIncrement from "./NumberIncrement";
 
-function TopBar({ items, gameStatus, images, playerDone }) {
+function TopBar({ items, images, playerDone }) {
 
     const [renderedItems, setRenderedItems] = useState(Array(6).fill(0));
 
@@ -25,7 +25,6 @@ function TopBar({ items, gameStatus, images, playerDone }) {
 
 
     useEffect(() => {
-        console.log(playerDone);
         if (playerDone) {
             
             renderItemsSequentially().then(() => {
@@ -37,15 +36,16 @@ function TopBar({ items, gameStatus, images, playerDone }) {
     }, [playerDone]);
 
     return (
-        <div>
-            <div className="flex justify-around items-center lg:mt-5">
+        <div >
+            <div className="flex portrait-phone:flex-wrap justify-around items-start lg:mt-5">
                 {
                     items.map((item, index) => (
-                        <div className="sm:scale-70 lg:scale-100" key={index}>
-                            <div className="bg-medium-gray h-32 w-32 border-4 border-black flex flex-col justify-center items-center">
+                        <div className="sm:scale-70 lg:scale-100 flex flex-col justify-center items-center max-w-[30%] landscape-phone:w-5 sm:w-10 md:w-full" key={index}>
+                            <div className="bg-dark-brown h-32 w-32 flex flex-col justify-center items-center mb-1 md:mb-0">
                                 {/* Temporary - I think skipped will have an X */}
                                 {/* {item?.name || item} */}
-                                <div className="bg-light-gray w-3/4 h-3/4 flex justify-center items-center">
+
+                                <div className="bg-light-brown w-3/4 h-3/4 flex justify-center items-center">
                                     {images[item?.name + ".png"] ? (
                                         <div className="animate-grow duration-50">
                                             <img
@@ -57,35 +57,16 @@ function TopBar({ items, gameStatus, images, playerDone }) {
                                         </div>
 
                                     ) : (
-                                        <span key={index}>{item?.name || item}</span>
+                                        <span className="text-center" key={index}>{item?.name || item}</span>
                                     )}
                                 </div>
                             </div>
-                            <p className=" text-center">{item?.name}</p>
-
-
-                            {/* The calories of the items */}
-                            {/* <div className="text-center">
-                            {(gameStatus === "FINISHED") ? (
-                                item.calories ? (
-
-
-                                
-                                <NumberIncrement value={item?.calories} />
-
-
-                                ):(<></>)
-                            ) :
-                                ""}
-                        </div> */}
+                            <p className={playerDone ? (`text-center text-md`):(`landscape-phone:hidden text-center text-md sm:text-3xl`) }>{item?.name}</p>
 
                         </div>
 
                     ))
                 }
-
-
-
 
             </div>
             {/* Here we show all cals */}
@@ -95,7 +76,7 @@ function TopBar({ items, gameStatus, images, playerDone }) {
                         className="text-center w-32"
                         key={index}
                     >
-                        {(item !== 0) && (
+                        {(playerDone) && (
                             <NumberIncrement value={item?.calories || 0} />
                         )}
                     </div>

@@ -3,7 +3,7 @@ import TopBar from "./TopBar";
 import Controller from "./Controller";
 import { useEffect, useState } from "react";
 import { useGameContext } from "./GameContext";
-import { submitScore } from "../api/gameApi";
+import { leaveGame, submitScore } from "../api/gameApi";
 import { supabase } from "../api/supabaseClient";
 import Winners from "./Winners";
 import NumberIncrement from "./NumberIncrement";
@@ -46,6 +46,8 @@ function Game() {
     //Player has submitted (so they can wait for others to finish)
     const [playerDone, setPlayerDone] = useState(false);
 
+    //Subbing
+    const [subscription, setSubscription] = useState(null);
 
     //Very simple TIMER - I initially had it as its own .js file but I think here for now is better, as I have access to other variables
     useEffect(() => {
@@ -70,13 +72,35 @@ function Game() {
 
     //Counter to update, because without it, we get async issues 
     useEffect(() => {
+        if (gameData.players.length == 0) navigate('/');
+
         if (counter >= maxLevels) {
             console.log("Game is done!");
             handleSubmit();
             setPlayerDone(true);
         }
+
+
     }, [counter]);
 
+
+
+    //This useEffect is for if users leave during game (so we dont hold up users)
+    useEffect(() => {
+
+        const handleBeforeUnload = (event) => {
+            //Kick player out of game basically
+            handleLeave().then(() => {
+                handleSubmit();
+            });
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, []);
 
     //Basically updating the top bar showing the items here
     const updateItemAtIndex = (newItem) => {
@@ -141,9 +165,10 @@ function Game() {
 
     //TEMPORARY - I dont want it RANDOM
     useEffect(() => {
+
         //subscribe to hear if EVERYONE is finished (thats all we care about in this stage)
         //Subscribe to see changes
-        const subscription = supabase
+        const sub = supabase
             .channel('public:game_sessions')
             .on(
                 'postgres_changes',
@@ -169,8 +194,6 @@ function Game() {
 
                     //Detect if host wants to rematch.
                     const rematchCount = payload.new.rematch_counter;
-                    // console.log("A change happened here is new rematch " + rematchCount );
-                    // console.log("A change happened here is old rematch " + gameData.rematchCount );
 
                     if (rematchCount > gameData.rematchCount) {
                         //First insert the data into gameData before we send player to lobby!
@@ -190,6 +213,8 @@ function Game() {
             )
             .subscribe();
 
+        setSubscription(sub);
+
         //Generate the food items the player sees
         randomSelectFood();
 
@@ -200,7 +225,12 @@ function Game() {
         }));
         // Clean up the event listener on component unmount
         return () => {
-            supabase.removeChannel(subscription);
+            if (sub?.state === 'subscribed') {
+                supabase.removeChannel(sub);
+            } else {
+                console.log("This was reached?");
+                //console.warn("No active subscription. User might've tried to access the game without proper setup");
+            }
         };
 
     }, []);
@@ -209,9 +239,9 @@ function Game() {
     //handle submit (basically submit once player is done..)
     const handleSubmit = async () => {
         try {
-            console.log("This is what we have selected");
-            console.log(accumulatedItems);
-            console.log("This is what we have selected");
+            // console.log("This is what we have selected");
+            // console.log(accumulatedItems);
+            // console.log("This is what we have selected");
 
             await submitScore(gameData.currentPlayer.player_id, gameData.gameId, accumulatedItems).then((res) => {
                 //console.log(res);
@@ -223,6 +253,15 @@ function Game() {
         }
     };
 
+    //Player leaves game
+    const handleLeave = async () => {
+        try {
+            await leaveGame(gameData.currentPlayer, gameData.gameId);
+        } catch (error) {
+        }
+
+    };
+
     // lookup object to map player_id to player name
     const playerLookup = gameData.players.reduce((acc, player) => {
         acc[player.player_id] = player.name;
@@ -231,10 +270,9 @@ function Game() {
 
     return (
         <div className="text-3xl font-bold min-h-screen">
-            <div>
                 {/* Top bar - basically slots for the items */}
                 <div className="flex flex-col">
-                    <TopBar items={accumulatedItems} gameStatus={gameData.gameStatus} images={gameData.images} playerDone={playerDone} />
+                    <TopBar items={accumulatedItems} images={gameData.images} playerDone={playerDone} />
                 </div>
 
                 {/* Middle part of screen, below the Top Bar and above the Table */}
@@ -273,6 +311,7 @@ function Game() {
                                 gameId={gameData.gameId}
                                 setGameData={setGameData}
                                 amILeader={gameData.leader}
+                                subscription={subscription}
                             />
                         </div>
                         )
@@ -280,7 +319,7 @@ function Game() {
                 </div>
 
                 {/* Entire Table - I hid the table and food items because on small screens it takes too much space. */}
-                <div className={`fixed bottom-0 w-[95%] left-0 right-0 mx-auto ${playerDone ? 'hidden':''} lg:block`}>
+                <div className={`fixed bottom-0 w-[95%] left-0 right-0 mx-auto ${playerDone ? 'hidden' : ''} lg:block flex-grow`}>
                     <Level
                         items={selectedItems}
                         selectFood={setCurrentSelectedItem}
@@ -299,10 +338,11 @@ function Game() {
                             position: "relative",
                             zIndex: "1",
                         }}
-                    ></div>
+                    >
+                    </div>
 
                     {/* Bottom part of table */}
-                    <div className=" bg-dark-brown text-center lg:h-[33vh] sm:h-[25vh]">
+                    <div className=" bg-dark-brown text-center lg:h-[33vh]">
                         <Controller
                             updateItemAtIndex={updateItemAtIndex}
                             refreshFood={randomSelectFood}
@@ -311,12 +351,13 @@ function Game() {
                             skip={skip}
                             setSkip={setSkip}
                             timer={timerObj}
+                            maxTimer={gameData.timer}
                             setTimer={setTimerObj}
                             caloriesGoal={gameData.caloriesGoal}
                         />
                     </div>
                 </div>
-            </div>
+           
         </div>
     );
 }

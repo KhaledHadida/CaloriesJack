@@ -1,10 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { rematch } from "../api/gameApi";
 import { leaveGame } from "../api/gameApi";
+import { supabase } from "../api/supabaseClient";
 
-function Winners({ players, winner, currentPlayer, caloriesGoal, gameId, setGameData, amILeader }) {
 
+function Winners({ players, winner, currentPlayer, caloriesGoal, gameId, setGameData, amILeader, subscription }) {
+
+    //Only to persist players because if I dont then any changes from DB is caught and is reflected here 
+    const playersRef = useRef(players);
     //This is so we can go to next component (GameLobby)
     const navigate = useNavigate();
     //Winner
@@ -13,17 +17,25 @@ function Winners({ players, winner, currentPlayer, caloriesGoal, gameId, setGame
     //In case we get multiple winners
     const [highestScoreSoFar, setHighestScoreSoFar] = useState(0);
 
+    //Toggle show / hide winners ui
+    const [toggleResults, setToggleResults] = useState(true);
+
     // lookup object to map player_id to player name
-    const playerLookup = players.reduce((acc, player) => {
+    const playerLookup = playersRef.current.reduce((acc, player) => {
         acc[player.player_id] = player.name;
         return acc;
     }, {});
 
     //Player leaves game
-    const handleLeave = async () => {
+    const handleLeave = async (subscription) => {
+        console.log("reset");
         try {
+            // Remove Supabase subscription (not the best solution but works)
+            supabase.removeChannel(subscription);
+            
             await leaveGame(currentPlayer, gameId);
         } catch (error) {
+
         }
         //Go home anyway - error or not.
         navigate('/');
@@ -83,8 +95,8 @@ function Winners({ players, winner, currentPlayer, caloriesGoal, gameId, setGame
 
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-90 lg:bg-opacity-50 z-50">
-            <div className="bg-white rounded-lg p-8 shadow-lg w-full max-w-md text-center lg:scale-100 scale-70">
+        <div className={`fixed inset-0 flex items-center justify-center ${toggleResults ? `bg-black bg-opacity-90 lg:bg-opacity-50` : ``} z-50 `}>
+            <div className={`dark:bg-dark-gray bg-white rounded-lg p-8 shadow-lg w-full max-w-md text-center lg:scale-100 scale-70 ${toggleResults ? `` : `hidden`}`}>
                 <h2 className=" font-semibold mb-4">Results</h2>
                 {/* Table */}
                 <div className="relative overflow-x-auto">
@@ -135,17 +147,23 @@ function Winners({ players, winner, currentPlayer, caloriesGoal, gameId, setGame
                 </div>
                 {amILeader ? (<button
                     onClick={handleRematch}
-                    className="bg-green-500 hover:bg-green-700 text-white py-2 px-4 mr-5 rounded focus:outline-none focus:shadow-outline transform transition-transform duration-200 hover:scale-110"
+                    className="dark:bg-light-gray bg-green-500 hover:bg-green-700 text-white py-2 px-4 mr-5 rounded focus:outline-none focus:shadow-outline transform transition-transform duration-200 hover:scale-110"
                 >
                     Rematch?
                 </button>) : (<></>)}
                 <button
-                    onClick={handleLeave}
-                    className="px-4 py-2 mt-5  bg-light-orange text-white rounded hover:bg-dark-orange transform transition-transform duration-200 hover:scale-110"
+                    onClick={() => { handleLeave(subscription) }}
+                    className="dark:bg-medium-gray px-4 py-2 mt-5  bg-light-orange text-white rounded hover:bg-dark-orange transform transition-transform duration-200 hover:scale-110"
                 >
                     Leave
                 </button>
             </div>
+            <button
+                onPointerUp={() => setToggleResults((prev) => !prev)}
+                className="dark:bg-light-gray fixed z-51 bottom-[1%] left-[1%] px-8 py-4 bg-light-orange text-white rounded hover:bg-dark-orange transform transition-transform duration-200 hover:scale-110"
+            >
+                {toggleResults ? 'Hide' : 'Show'}
+            </button>
         </div>
     );
 }

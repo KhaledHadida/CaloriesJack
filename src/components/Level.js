@@ -1,21 +1,24 @@
 function Level({ items, selectFood, tempSelected, images }) {
     return (
-        <div className="absolute w-full flex justify-around items-center -translate-y-24 z-20">
+        <div className="absolute w-full flex justify-around items-center -translate-y-[50%] z-20 scale-90  sm:scale-100 ">
             {items.map((item, index) => (
-                <div key={index}>
-                    <div onClick={(() => { selectFood(item) })} className={`cursor-pointer transition-transform duration-200 ease-in-out 
-                ${tempSelected == item ? 'scale-125 z-10' : 'scale-100'}`}>
+                    <div key={index} onClick={(() => { selectFood(item) })} className={
+                        ` cursor-pointer transition-transform duration-200 ease-in-out lg:w-32 sm:w-24 
+                ${tempSelected == item ? 'scale-150 pointer-events-none' : 'scale-100'}`}>
                         {/* {item.name} */}
 
                         {images[item.name + ".png"] ? (
-                            <div className="sm:-translate-y-3 sm:scale-70 lg:scale-100 lg:-translate-y-9">
-                                <p className="text-center text-md">{item.name}</p>
-                                <img
-                                    style={{ width: '150px', height: '150px', objectFit: 'contain', imageRendering: 'pixelated', filter: 'drop-shadow(0 25px 8px rgba(0, 0, 0, 0.3))', }}
-                                    key={index}
-                                    src={images[item.name + ".png"]}
-                                    alt={`Image ${item.name}`}
-                                />
+                            <div className="sm:-translate-y-3 sm:scale-70 lg:scale-100 lg:-translate-y-9 w-full flex flex-col ">
+                                <div>
+                                    <p className="text-center text-md sm:text-3xl w-[50px] sm:w-full">{item.name}</p>
+                                    <img
+
+                                        style={{ width: '150px',  objectFit: 'contain', imageRendering: 'pixelated', filter: 'drop-shadow(0 25px 8px rgba(0, 0, 0, 0.3))', }}
+                                        key={index}
+                                        src={images[item.name + ".png"]}
+                                        alt={`Image ${item.name}`}
+                                    />
+                                </div>
                             </div>
 
                         ) : (
@@ -24,7 +27,7 @@ function Level({ items, selectFood, tempSelected, images }) {
                             </div>
                         )}
                     </div>
-                </div>
+                
             ))}
         </div>
     );
