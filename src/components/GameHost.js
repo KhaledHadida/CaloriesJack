@@ -72,9 +72,13 @@ function GameHost() {
                         timer: res.gameSession.timer,
                         winner: res.gameSession.winner
                     }));
+
+                    //NEW - We no longer will allow Backend to store our cookies (CORS issues persisting)
+                    // Save token in a cookie
+                    document.cookie = `leaderSession=${res.token}; path=/; max-age=7200; secure; samesite=None`;
                 });
                 setResponse("Successfully created a game!");
-                navigate('/lobby');
+                navigate('/lobby',{ replace: true });
             }
         } catch (error) {
             setResponse(error.message);

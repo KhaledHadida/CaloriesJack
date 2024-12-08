@@ -65,7 +65,8 @@ function GameLobby() {
                 // handleStart().then(() => {
                 //     setIsRunning(false);
                 // });
-                navigate('/game');
+                //This puts the player into game screen.
+                navigate('/game',{ replace: true });
             }
         }
     }, [time, isRunning]);

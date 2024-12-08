@@ -38,7 +38,7 @@ function Winners({ players, winner, currentPlayer, caloriesGoal, gameId, setGame
 
         }
         //Go home anyway - error or not.
-        navigate('/');
+        navigate('/',{ replace: true });
     };
 
     //Player leaves game
