@@ -18,7 +18,8 @@ export const GameProvider = ({children}) => {
         winner: null,
         //This is to store all the images for the food
         images: {},
-        rematchCount: 0
+        rematchCount: 0,
+        token: null,
     });
 
 

@@ -5,7 +5,7 @@ import { leaveGame } from "../api/gameApi";
 import { supabase } from "../api/supabaseClient";
 
 
-function Winners({ players, winner, currentPlayer, caloriesGoal, gameId, setGameData, amILeader, subscription }) {
+function Winners({ players, winner, currentPlayer, caloriesGoal, gameId, setGameData, amILeader, subscription, token }) {
 
     //Only to persist players because if I dont then any changes from DB is caught and is reflected here 
     const playersRef = useRef(players);
@@ -44,7 +44,7 @@ function Winners({ players, winner, currentPlayer, caloriesGoal, gameId, setGame
     //Player leaves game
     const handleRematch = async () => {
         try {
-            await rematch(gameId).then((res) => {
+            await rematch(gameId, token).then((res) => {
                 setGameData((oldData) => ({
                     ...oldData,
                     gameStatus: res.gameSession.game_status,

@@ -191,7 +191,7 @@ function GameLobby() {
     //leader starting game
     const handleStart = async () => {
         try {
-            await startGame(gameData.gameId);
+            await startGame(gameData.gameId, gameData.token);
             //setResponse("Successfully started the game!");
             //Go play the game!
             // navigate('/game');

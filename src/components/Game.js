@@ -312,6 +312,7 @@ function Game() {
                                 setGameData={setGameData}
                                 amILeader={gameData.leader}
                                 subscription={subscription}
+                                token={gameData.token}
                             />
                         </div>
                         )

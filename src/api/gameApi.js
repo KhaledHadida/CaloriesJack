@@ -85,11 +85,12 @@ export const leaveGame = async (player, gameId) => {
 }
 
 //Start a game
-export const startGame = async (gameId) => {
+export const startGame = async (gameId, token) => {
     //params
     const data = {
-        game_id: gameId
-    }
+        game_id: gameId,
+        leaderSession: token
+    }   
 
     try {
         const response = await api.post('/startGame', data, {
@@ -168,10 +169,11 @@ export const endGame = async (gameId) => {
 
 
 //Rematch - ONLY LEADERS CAN DO THIS.
-export const rematch = async (gameId) => {
+export const rematch = async (gameId, token) => {
     //params
     const data = {
-        gameId: gameId
+        gameId: gameId,
+        leaderSession: token
     }
 
     try {

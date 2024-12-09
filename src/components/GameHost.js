@@ -70,12 +70,10 @@ function GameHost() {
                         leader: res.gameSession.leader,
                         caloriesGoal: res.gameSession.calories_goal,
                         timer: res.gameSession.timer,
-                        winner: res.gameSession.winner
+                        winner: res.gameSession.winner,
+                        //NEW - Add token in gameData in case cookies dont work
+                        token: res.token
                     }));
-
-                    //NEW - We no longer will allow Backend to store our cookies (CORS issues persisting)
-                    // Save token in a cookie
-                    document.cookie = `leaderSession=${res.token}; path=/; max-age=7200; secure; samesite=None`;
                 });
                 setResponse("Successfully created a game!");
                 navigate('/lobby',{ replace: true });
