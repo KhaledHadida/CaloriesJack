@@ -30,10 +30,22 @@ git clone https://github.com/KhaledHadida/CaloriesJack.git
 cd CaloriesJack
 ```
 
-### `npm start`
+2. Set up your .env file in src folder with Supabase variables (You will need to create a Supabase project to retrieve [anon key & URL](https://supabase.com/docs/guides/api))
 
-Runs the app in the development mode.\
+```
+REACT_APP_SUPABASE_URL="YOUR URL HERE"
+REACT_APP_API_BASE_URL="http://localhost:8080"
+REACT_APP_SUPABASE_ANON_KEY="YOUR ANON KEY HERE"
+```
+
+3. Install Dependencies & Start the Frontend Development Server
+
+```
+npm install
+npm start
+```
+
+Make sure the [backend](https://github.com/KhaledHadida/CaloriesJack-Backend) is also running.
+
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
