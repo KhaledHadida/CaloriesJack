@@ -3,10 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { rematch } from "../api/gameApi";
 import { leaveGame } from "../api/gameApi";
 import { supabase } from "../api/supabaseClient";
+import { useGameContext } from "./GameContext";
 
 
 function Winners({ players, winner, currentPlayer, caloriesGoal, gameId, setGameData, amILeader, subscription, token }) {
-
+    const { playSound } = useGameContext();
     //Only to persist players because if I dont then any changes from DB is caught and is reflected here 
     const playersRef = useRef(players);
     //This is so we can go to next component (GameLobby)
@@ -32,13 +33,13 @@ function Winners({ players, winner, currentPlayer, caloriesGoal, gameId, setGame
         try {
             // Remove Supabase subscription (not the best solution but works)
             supabase.removeChannel(subscription);
-            
+            playSound('Back');
             await leaveGame(currentPlayer, gameId);
         } catch (error) {
 
         }
         //Go home anyway - error or not.
-        navigate('/',{ replace: true });
+        navigate('/', { replace: true });
     };
 
     //Player leaves game
@@ -53,7 +54,7 @@ function Winners({ players, winner, currentPlayer, caloriesGoal, gameId, setGame
                     winner: res.gameSession.winner,
                     rematchCount: res.gameSession.rematch_counter
                 }));
-
+                playSound('Click');
                 //Put the player into lobby  
                 navigate('/lobby');
             });
@@ -72,6 +73,9 @@ function Winners({ players, winner, currentPlayer, caloriesGoal, gameId, setGame
 
     //Logic to determine if user won or lost.
     useEffect(() => {
+        //Play sound when this appears
+        playSound('Won');
+
         let highestScore = 0;
         let potentialWinners = [];
 
@@ -133,16 +137,10 @@ function Winners({ players, winner, currentPlayer, caloriesGoal, gameId, setGame
                                     )}
                                 </tr>
                             ))}
-                            {/* <tr>
-                                <th colSpan={2}>
-                                    <div className="bg-light-peach p-4 border text-xl border-gray-400">{caloriesGoal}</div>
-                                </th>
-                            </tr> */}
                         </tbody>
                     </table>
                 </div>
                 <div className="mt-5">
-                    {/* {winnerPlayer === currentPlayer.player_id ? <h2>You won!</h2> : <h2>You lost.</h2>} */}
                     {winnerPlayers.includes(currentPlayer.player_id) ? <h2>You won!</h2> : <h2>You lost.</h2>}
                 </div>
                 {amILeader ? (<button

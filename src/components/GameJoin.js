@@ -7,7 +7,7 @@ import BackButton from "./BackButton";
 
 function GameJoin() {
     //Global access of game properties
-    const { setGameData } = useGameContext();
+    const { setGameData, playSound } = useGameContext();
 
     //This is so we can go to next component (GameLobby)
     const navigate = useNavigate();
@@ -54,6 +54,7 @@ function GameJoin() {
                         rematchCount: res.gameSession.rematch_counter
                     }));
                 });
+                playSound('Start');
                 setResponse("Successfully joined a game!");
                 navigate('/lobby');
             }
@@ -79,7 +80,7 @@ function GameJoin() {
     }
 
     return (
-        <div className="h-full flex flex-col text-3xl">
+        <div className="h-full flex flex-col text-3xl mx-3">
             <BackButton />
             <h1 className="text-6xl md:text-8xl lg:text-center text-right my-5">Join a Game</h1>
             <div className="flex flex-grow items-center justify-center">

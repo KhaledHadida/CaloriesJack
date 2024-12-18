@@ -7,7 +7,7 @@ import BackButton from "./BackButton";
 
 function GameHost() {
     //Global access of game properties
-    const { setGameData } = useGameContext();
+    const { setGameData, playSound } = useGameContext();
 
     //This is so we can go to next component (GameLobby)
     const navigate = useNavigate();
@@ -76,6 +76,7 @@ function GameHost() {
                     }));
                 });
                 setResponse("Successfully created a game!");
+                playSound('Start');
                 navigate('/lobby',{ replace: true });
             }
         } catch (error) {
@@ -120,7 +121,7 @@ function GameHost() {
     }, []);
 
     return (
-        <div className="text-3xl h-full flex flex-col">
+        <div className="text-3xl h-full flex flex-col mx-3">
             <BackButton />
             <h1 className="text-6xl md:text-8xl lg:text-center text-right my-5">Host a Game</h1>
             <div className="flex items-center justify-center flex-grow">
@@ -154,7 +155,7 @@ function GameHost() {
                         <input className="dark:bg-medium-gray dark:placeholder-light-gray dark:text-white block shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-11 w-full"
                             id="caloriesGoal" type="number" placeholder="Timer (min 30 secs)" max="9999" min="30" value={timer} onChange={handleTimer} required />
                         <p className="my-5 text-red-500">{response}</p>
-                        <button className="dark:bg-medium-gray  bg-green-500 hover:bg-green-700 text-white py-2 w-1/2 rounded focus:outline-none focus:shadow-outline transform transition-transform duration-200 hover:scale-110" type="submit">
+                        <button  className="dark:bg-medium-gray  bg-green-500 hover:bg-green-700 text-white py-2 w-1/2 rounded focus:outline-none focus:shadow-outline transform transition-transform duration-200 hover:scale-110" type="submit">
                             Create
                         </button>
                         {showMsg && (

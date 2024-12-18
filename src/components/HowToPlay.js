@@ -5,7 +5,7 @@ import { GoGoal } from "react-icons/go";
 import { GoSkip } from "react-icons/go";
 import BackButton from "./BackButton";
 
-
+//Quick tutorial on how to play the game.
 function HowToPlay() {
     return (
         <div className="flex flex-col items-center h-full">
@@ -27,9 +27,6 @@ function HowToPlay() {
                     </div>
                     <p>You are given 6 levels of food items to pick from.</p>
                 </div>
-
-
-
                 <div className="flex items-center gap-10">
                     {/* icon and text */}
                     <div className="rounded-full bg-dark-orange dark:bg-dark-gray p-5 text-gray-100 shadow-xl">

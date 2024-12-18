@@ -16,9 +16,8 @@ function Game() {
     //This is so we can go to next component (GameLobby)
     const navigate = useNavigate();
 
-
     //All vars come from here
-    const { gameData, setGameData } = useGameContext();
+    const { gameData, setGameData, playSound } = useGameContext();
     //Put this in backend perhaps?
     const maxLevels = 6;
     // const savedIndex = 0;
@@ -53,8 +52,11 @@ function Game() {
     useEffect(() => {
         if (gameData.gameStatus === "FINISHED") return;
 
-
+        
         if (timerObj > 0) {
+            if(timerObj <= 20){
+                playSound('Clock');
+            }
             const timeoutId = setTimeout(() => {
                 setTimerObj((prevTimer) => prevTimer - 1);
             }, 1000);
@@ -151,8 +153,6 @@ function Game() {
             // Add the current item to the list
             tempSelectedItems.push(loadedFoodItems[currentIndex]);
 
-            //console.log(`Item ${currentIndex}:`, loadedFoodItems[currentIndex]);
-
             // Move to the next index
             currentIndex++;
         }
@@ -228,7 +228,6 @@ function Game() {
             if (sub?.state === 'subscribed') {
                 supabase.removeChannel(sub);
             } else {
-                console.log("This was reached?");
                 //console.warn("No active subscription. User might've tried to access the game without proper setup");
             }
         };
@@ -239,14 +238,9 @@ function Game() {
     //handle submit (basically submit once player is done..)
     const handleSubmit = async () => {
         try {
-            // console.log("This is what we have selected");
-            // console.log(accumulatedItems);
-            // console.log("This is what we have selected");
-
             await submitScore(gameData.currentPlayer.player_id, gameData.gameId, accumulatedItems).then((res) => {
                 //console.log(res);
             });
-            //navigate('/lobby');
 
         } catch (error) {
             console.log('Error submitting game results!!', error.response);
@@ -321,6 +315,7 @@ function Game() {
 
                 {/* Entire Table - I hid the table and food items because on small screens it takes too much space. */}
                 <div className={`fixed bottom-0 w-[95%] left-0 right-0 mx-auto ${playerDone ? 'hidden' : ''} lg:block flex-grow`}>
+                    {/* This is 6 items you will see */}
                     <Level
                         items={selectedItems}
                         selectFood={setCurrentSelectedItem}

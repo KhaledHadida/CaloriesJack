@@ -10,7 +10,7 @@ import LoadingDots from "./LoadingDots";
 import { FaGratipay } from "react-icons/fa6";
 
 function GameLobby() {
-    const { gameData, setGameData } = useGameContext();
+    const { gameData, setGameData, playSound } = useGameContext();
 
     //Tips bank (May move later if list grows too big)
     const tips = [
@@ -56,15 +56,13 @@ function GameLobby() {
         if (isRunning) {
             if (time > 0) {
                 const timeoutId = setTimeout(() => {
+                    playSound('Clock');
                     setTime((prevTimer) => prevTimer - 1);
                 }, 1000);
 
                 return () => { clearTimeout(timeoutId) };
             } else {
                 //Start game
-                // handleStart().then(() => {
-                //     setIsRunning(false);
-                // });
                 //This puts the player into game screen.
                 navigate('/game',{ replace: true });
             }
@@ -75,9 +73,6 @@ function GameLobby() {
     //This is to LOAD in the images
     const loadImages = async () => {
         const loadedImages = await Promise.all(
-
-            //imageNames.map((name) => loadImage(name));
-
             //NEW
             gameData.foodItems.map(async (item) => {
                 const imageName = item.name;
@@ -180,6 +175,7 @@ function GameLobby() {
     const handleLeave = async () => {
         try {
             await leaveGame(gameData.currentPlayer, gameData.gameId);
+            playSound('Back');
             setResponse("Leaving the game..");
         } catch (error) {
             setResponse("An error has occurred.");
@@ -192,9 +188,7 @@ function GameLobby() {
     const handleStart = async () => {
         try {
             await startGame(gameData.gameId, gameData.token);
-            //setResponse("Successfully started the game!");
-            //Go play the game!
-            // navigate('/game');
+            playSound('Start');
 
         } catch (error) {
             setResponse(error.message);
@@ -225,9 +219,9 @@ function GameLobby() {
                         <h1 className="">Calories (per 100g): {gameData.caloriesGoal}</h1>
                         <h1 className="">Timer: {gameData.timer}</h1>
                     </div>
-                    <div className="flex justify-center items-center gap-x-3">
+                    <div className="flex justify-center items-center gap-x-3 mx-5">
                         <FaGratipay size={20} />
-                        <div className="text-2xl">
+                        <div className="text-2xl text-center">
                             <p className="font-bold inline">Tip: </p>
                             {/* random tips! */}
                             <span>{currentTip.current}</span>

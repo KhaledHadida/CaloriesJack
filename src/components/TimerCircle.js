@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 
+//This is the timer within the game at the bottom.
 const TimerCircle = ({ time, duration }) => {
 
     const normalizedTime = time / duration;

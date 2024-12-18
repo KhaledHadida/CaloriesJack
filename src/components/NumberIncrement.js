@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 
-//This is for numbers being incremented.
+//This is for numbers being incremented (animation) - really useful for future projects.
 const NumberIncrement = ({ value, duration = 2000 }) => {
     const [currentValue, setCurrentValue] = useState(0);
 

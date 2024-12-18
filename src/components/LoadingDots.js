@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-
+//Simple dots animation (. .. ...)
 const LoadingDots = ({text}) => {
 
     const [dots, setDots] = useState('');

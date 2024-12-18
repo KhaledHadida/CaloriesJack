@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import NumberIncrement from "./NumberIncrement";
 
+//This is for the 6 item frames at the top of the screen, placeholders for the food items yet to be selected.
 function TopBar({ items, images, playerDone }) {
 
     const [renderedItems, setRenderedItems] = useState(Array(6).fill(0));
-
 
     // Sequentially render items
     const renderItemsSequentially = async () => {
@@ -44,7 +44,6 @@ function TopBar({ items, images, playerDone }) {
                             <div className="bg-dark-brown h-32 w-32 flex flex-col justify-center items-center mb-1 md:mb-0">
                                 {/* Temporary - I think skipped will have an X */}
                                 {/* {item?.name || item} */}
-
                                 <div className="bg-light-brown w-3/4 h-3/4 flex justify-center items-center">
                                     {images[item?.name + ".png"] ? (
                                         <div className="animate-grow duration-50">

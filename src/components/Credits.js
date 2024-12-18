@@ -1,5 +1,5 @@
 import BackButton from "./BackButton";
-
+//Credits for art used.
 function Credits() {
     return (
         <div className="flex flex-col sm:items-center h-screen">

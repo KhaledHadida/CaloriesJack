@@ -1,19 +1,28 @@
 import BackButton from "./BackButton";
+import { MdKeyboardDoubleArrowDown } from "react-icons/md";
 
+//Dev logs showcasing all of my past contributions to the game
 function DevLogs() {
     return (
         <div className="flex flex-col items-center w-full">
             <BackButton />
             <h1 className="text-6xl md:text-8xl lg:text-center text-right mt-5">Log History of Development</h1>
-            <h1 className="text-4xl font-bold underline">Potential Future Updates</h1>
+            <h1 className="text-4xl font-bold underline">Potential Future Updates (?)</h1>
 
             {/* List for Potential Future Updates */}
             <ul className="list-disc text-xl sm:text-3xl mx-5 list-inside space-y-3">
-                <li>Sounds when buttons pressed</li>
-                <li>Further improvement to the UI (i.e game host & join)</li>
-                <li>Fix mobile responsiveness for portrait mode (as of now it's not suitable for it, please play landscape!)</li>
                 <li>More customization in game lobbies (i.e cals per X grams, number of skips, etc)</li>
                 <li>Increase food items pool from 100 to 500 (maybe.. I need the art)</li>
+                <div className="flex justify-center">
+                    < MdKeyboardDoubleArrowDown size={75} />
+                </div>
+            </ul>
+            <h1 className="mt-14 text-4xl font-bold underline">Version 2.2: Sounds</h1>
+            {/* List for Version 2.2 */}
+            <ul className="list-disc text-xl sm:text-3xl mx-5 list-inside space-y-3">
+                <li>Added sounds to the game</li>
+                <li>Fixed theme bug where if user refreshes in any screens other than Main Menu it goes back to default</li>
+
             </ul>
 
             <h1 className="mt-14 text-4xl font-bold underline">Version 2.1: Mostly Bug Fixes</h1>
